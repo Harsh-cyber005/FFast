@@ -31,7 +31,7 @@ To build the executable from the source code, follow these steps:
 
 1. **Clone the Repository:**
 ```bash
-git clone https://github.com/yourusername/FFast.git
+git clone https://github.com/Harsh-cyber005/FFast
 cd FFast
 
 ```
