@@ -115,5 +115,3 @@ git push origin your-branch-name
 ---
 
 **Note:** This tool is intended for personal automation and efficiency. Ensure you have the rights to the content you are downloading.
-
-Would you like me to create a `.github/workflows` file to automate the build process for you?
