@@ -134,3 +134,19 @@ func GetDownloadStateCache(hash string) ([]int, []int, int, int, int, error) {
 	fmt.Sscanf(lines[4], "%d", &selectiveCompleted)
 	return optionalChoices, selectiveChoices, mandatoryCompleted, optionalCompleted, selectiveCompleted, nil
 }
+
+func ClearDownloadStateCache() error {
+	files, err := os.ReadDir("cache")
+	if err != nil {
+		return err
+	}
+	for _, file := range files {
+		if strings.HasSuffix(file.Name(), "_state.txt") {
+			err = os.Remove("cache/" + file.Name())
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}

@@ -66,6 +66,7 @@ func getOrUpdatePath(db *sql.DB) string {
 			log.Fatalf("Update failed: %v", err)
 		}
 		fmt.Println("Path initialized successfully.")
+		restartFDM()
 	} else {
 		fmt.Printf("Existing FDM Path: %s\n", existingPath)
 		fmt.Print("Would you like to change it? (y/N): ")

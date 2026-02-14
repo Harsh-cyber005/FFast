@@ -31,7 +31,7 @@ func takeInput(prompt string, placeholder string, defaultValue string, optional 
 	return input
 }
 
-func main() {
+func start() {
 	URL := ""
 	name := ""
 	cURL,cName, err := cacheCode.GetCurrentPasteBinURL()
@@ -60,4 +60,34 @@ func main() {
 	ff.DecodePrivateBin()
 	ff.SelectLinks()
 	ff.DownloadParts()
+}
+
+func main() {
+	args := os.Args
+	// --help or -h
+	if len(args) < 2 {
+		fmt.Println("Usage: ffast [options], where options can be:")
+		fmt.Println("  --start, -s\t\tStart the interactive terminal")
+		fmt.Println("  --clear-cache, -c\tClear the cached PasteBin URL")
+		fmt.Println("  --help, -h\t\tShow this help message")
+		return
+	}
+	switch args[1] {
+	case "--help", "-h":
+		fmt.Println("Usage: ffast [options], where options can be:")
+		fmt.Println("  --start, -s\t\tStart the interactive terminal")
+		fmt.Println("  --clear-cache, -c\tClear the cached PasteBin URL")
+		fmt.Println("  --help, -h\t\tShow this help message")
+	case "--start", "-s":
+		start()
+	case "--clear-cache", "-c":
+		err := cacheCode.ClearDownloadStateCache()
+		if err != nil {
+			log.Fatal("Failed to clear cache:", err)
+		}
+		fmt.Println("Cache cleared successfully.")
+	default:
+		fmt.Println("Unknown option:", args[1])
+		fmt.Println("Use --help or -h to see the available options.")
+	}
 }
