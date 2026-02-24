@@ -1,13 +1,14 @@
 package main
 
 import (
+	"FFast/ffast"
+	"FFast/ffast/cacheCode"
 	"bufio"
 	"fmt"
 	"log"
 	"os"
-	"FFast/ffast"
-	"FFast/ffast/cacheCode"
 	"strings"
+	"sync"
 )
 
 // Take input from the Interactive Terminal
@@ -62,14 +63,24 @@ func start() {
 	ff.DownloadParts()
 }
 
+func waitForExit(wg *sync.WaitGroup) {
+	fmt.Println("Press Enter to exit...")
+	reader := bufio.NewReader(os.Stdin)
+	_, _ = reader.ReadString('\n')
+	wg.Done()
+}
+
 func main() {
 	args := os.Args
-	// --help or -h
 	if len(args) < 2 {
 		fmt.Println("Usage: ffast [options], where options can be:")
-		fmt.Println("  --start, -s\t\tStart the interactive terminal")
+		fmt.Println("  start, s, --start, -s, --run\t\tStart the interactive terminal")
 		fmt.Println("  --clear-cache, -c\tClear the cached PasteBin URL")
 		fmt.Println("  --help, -h\t\tShow this help message")
+		wg := sync.WaitGroup{}
+		wg.Add(1)
+		go waitForExit(&wg)
+		wg.Wait()
 		return
 	}
 	switch args[1] {
@@ -78,7 +89,7 @@ func main() {
 		fmt.Println("  --start, -s\t\tStart the interactive terminal")
 		fmt.Println("  --clear-cache, -c\tClear the cached PasteBin URL")
 		fmt.Println("  --help, -h\t\tShow this help message")
-	case "--start", "-s":
+	case "--start", "-s", "start", "s", "run":
 		start()
 	case "--clear-cache", "-c":
 		err := cacheCode.ClearDownloadStateCache()

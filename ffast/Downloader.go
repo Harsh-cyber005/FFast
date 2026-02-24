@@ -1,6 +1,8 @@
 package ffast
 
 import (
+	"FFast/ffast/cacheCode"
+	fdmconfig "FFast/ffast/fdmConfig"
 	"bufio"
 	"context"
 	"encoding/json"
@@ -10,10 +12,9 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"FFast/ffast/cacheCode"
-	fdmconfig "FFast/ffast/fdmConfig"
 	"regexp"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -254,7 +255,18 @@ func downloadAPart(url string, fdmDownloadPath string) {
 	if err != nil {
 		log.Fatal("[ERROR] Could not download the file: ", err)
 	}
-	time.Sleep(1500*time.Millisecond)
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for {
+			if _, err := os.Stat(tempFilePath); err == nil {
+				break
+			}
+			time.Sleep(200*time.Millisecond)
+		}
+	}()
+	wg.Wait()
 
 	_, err = os.Stat(tempFilePath)
 	if err != nil {
